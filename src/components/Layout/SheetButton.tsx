@@ -1,15 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import {NavLink} from "react-router-dom";
 import {
     Sheet,
-    SheetClose,
     SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
+    SheetClose
 } from "@/components/ui/sheet"
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -20,31 +14,17 @@ const SheetButton = () => {
                 <MenuIcon />
             </SheetTrigger>
             <SheetContent>
-                <SheetHeader>
-                    <SheetTitle>Edit profile</SheetTitle>
-                    <SheetDescription>
-                        Make changes to your profile here. Click save when you're done.
-                    </SheetDescription>
-                </SheetHeader>
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                            Name
-                        </Label>
-                        <Input id="name" value="Pedro Duarte" className="col-span-3" />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="text-right">
-                            Username
-                        </Label>
-                        <Input id="username" value="@peduarte" className="col-span-3" />
-                    </div>
-                </div>
-                <SheetFooter>
+                <div className={"grid text-2xl gap-6"}>
                     <SheetClose asChild>
-                        <Button type="submit">Save changes</Button>
+                    <NavLink to={"/"}>Home</NavLink>
                     </SheetClose>
-                </SheetFooter>
+                    <SheetClose asChild>
+                    <NavLink to={"/photo"}>Photo</NavLink>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <NavLink to={"/"}>Diary</NavLink>
+                    </SheetClose>
+                </div>
             </SheetContent>
         </Sheet>
     )
