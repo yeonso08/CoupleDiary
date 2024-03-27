@@ -8,7 +8,7 @@ const Photo = () => {
 
     useEffect(() => {
         const fetchImages = async () => {
-            const fileRef = ref(fstorage, '/');
+            const fileRef = ref(fstorage, '/jiminPhoto');
             const result = await listAll(fileRef);
             const urls = await Promise.all(
                 result.items.map((item) => getDownloadURL(item))
@@ -20,16 +20,16 @@ const Photo = () => {
     }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트가 마운트될 때 한 번만 실행되도록 함
 
     return (
-        <div className={"h-screen bg-blue-300"}>
+        <div className={"h-full bg-blue-300"}>
             <div className={"p-24"} />
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Photo</div>
-            <div>
+            <div className={"px-2"}>
                 <ResponsiveMasonry
-                    columnsCountBreakPoints={{350: 1, 750: 2, 900: 7}}
+                    columnsCountBreakPoints={{350: 3, 750: 2, 900: 7}}
                 >
                     <Masonry gutter="10px">
                         {images.map((url, index) => (
-                            <img key={index} className="w-full" src={url} alt="Uploaded"/>
+                            <img key={index} className="w-full rounded-lg" src={url} alt="Uploaded"/>
                         ))}
                     </Masonry>
                 </ResponsiveMasonry>
