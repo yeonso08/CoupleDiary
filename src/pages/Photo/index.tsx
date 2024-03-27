@@ -1,6 +1,23 @@
+import  { useState, useEffect } from 'react';
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
+import { fstorage } from '../../../firebase/firebase';
+import { ref, listAll, getDownloadURL } from 'firebase/storage';
 
 const Photo = () => {
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            const fileRef = ref(fstorage, '/');
+            const result = await listAll(fileRef);
+            const urls = await Promise.all(
+                result.items.map((item) => getDownloadURL(item))
+            );
+            setImages(urls); // URL 배열을 상태 변수에 저장
+        };
+
+        fetchImages();
+    }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트가 마운트될 때 한 번만 실행되도록 함
 
     return (
         <div className={"h-screen bg-blue-300"}>
@@ -11,17 +28,9 @@ const Photo = () => {
                     columnsCountBreakPoints={{350: 1, 750: 2, 900: 7}}
                 >
                     <Masonry gutter="10px">
-                        <img className={"w-full"} src={"src/assets/1.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/2.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/3.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/4.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/5.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/6.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/7.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/8.jpg"}/>
-                        <img className={"w-full"} src={"src/assets/9.jpg"}/>
-                        <img className={"w-full"} src={"https://picsum.photos/200/300?image=1050"}/>
-
+                        {images.map((url, index) => (
+                            <img key={index} className="w-full" src={url} alt="Uploaded"/>
+                        ))}
                     </Masonry>
                 </ResponsiveMasonry>
             </div>
