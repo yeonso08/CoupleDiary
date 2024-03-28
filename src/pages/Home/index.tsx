@@ -1,18 +1,20 @@
 import  { useState, useEffect } from 'react';
+import mainPhoto from '../../assets/mainPhoto.jpg';
+import mobileMainPhoto from '../../assets/mobileMainPhoto.jpg';
 
 const Home = () => {
-    const [imageSrc, setImageSrc] = useState("src/assets/mainPhoto.jpg");
+    const [imageSrc, setImageSrc] = useState(mainPhoto);
     const [containerClass, setContainerClass] = useState("flex justify-center items-center h-screen bg-green-950");
 
     useEffect(() => {
         // 브라우저 너비에 따라 이미지 소스 변경
         const handleResize = () => {
             if (window.innerWidth <= 640) {
-                setImageSrc("src/assets/IMG_3048.JPG");
+                setImageSrc(mobileMainPhoto);
                 setContainerClass("flex justify-center items-center h-screen bg-[#314840]");
 
             } else {
-                setImageSrc("src/assets/mainPhoto.jpg");
+                setImageSrc(mainPhoto);
                 setContainerClass("");
             }
         };

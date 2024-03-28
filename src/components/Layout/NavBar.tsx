@@ -21,7 +21,7 @@ const NavBar = () => {
     }, []);
 
     return (
-        <div className={`p-4 fixed top-0 left-0 right-0 z-10 ${scrolled ? 'bg-blue-200 opacity-90' : 'bg-transparent'}`}>
+        <div className={`p-4 fixed top-0 left-0 right-0 z-10 ${scrolled ? 'bg-[#314840] opacity-90' : 'bg-transparent'}`}>
             <div className={"flex justify-between text-white"}>
                 <div className={"font-semibold text-xl pl-4"}>
                     <NavLink to={"/"}>23.12.11</NavLink>

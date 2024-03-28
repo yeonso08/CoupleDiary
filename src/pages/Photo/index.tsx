@@ -20,7 +20,7 @@ const Photo = () => {
     }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트가 마운트될 때 한 번만 실행되도록 함
 
     return (
-        <div className={"h-full bg-blue-300"}>
+        <div className={"h-full bg-[#314840]"}>
             <div className={"p-24"} />
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Photo</div>
             <div className={"px-2"}>
