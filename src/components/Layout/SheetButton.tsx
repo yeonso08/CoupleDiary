@@ -4,7 +4,7 @@ import {
     SheetContent,
     SheetTrigger,
     SheetClose
-} from "@/components/ui/sheet"
+} from "../ui/sheet"
 import MenuIcon from "@mui/icons-material/Menu";
 
 const SheetButton = () => {

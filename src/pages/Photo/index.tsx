@@ -1,10 +1,10 @@
 import  { useState, useEffect } from 'react';
-import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
+import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry';
 import { fstorage } from '../../../firebase/firebase';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 
 const Photo = () => {
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchImages = async () => {
