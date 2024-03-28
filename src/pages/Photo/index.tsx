@@ -23,7 +23,7 @@ const Photo = () => {
         <div className={"h-full bg-[#314840]"}>
             <div className={"p-24"} />
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Photo</div>
-            <div className={"px-2"}>
+            <div className={"px-2 pb-4"}>
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{350: 3, 750: 2, 900: 7}}
                 >
