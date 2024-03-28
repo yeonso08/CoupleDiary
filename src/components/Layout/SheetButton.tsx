@@ -6,6 +6,7 @@ import {
     SheetClose
 } from "../ui/sheet"
 import MenuIcon from "@mui/icons-material/Menu";
+import LoginButton from "./LoginButton.tsx";
 
 const SheetButton = () => {
     return (
@@ -23,6 +24,9 @@ const SheetButton = () => {
                     </SheetClose>
                     <SheetClose asChild>
                         <NavLink to={"/"}>Diary</NavLink>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <LoginButton />
                     </SheetClose>
                 </div>
             </SheetContent>
