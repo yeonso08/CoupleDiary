@@ -2,6 +2,7 @@ import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry';
 import { fstorage } from '../../../firebase/firebase';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { useQuery } from '@tanstack/react-query'
+import {Skeleton} from "../../components/ui/skeleton.tsx";
 
 const fetchImages = async () => {
     const fileRef = ref(fstorage, '/jiminPhoto');
@@ -13,7 +14,7 @@ const fetchImages = async () => {
 };
 const Photo = () => {
 
-    const { data: images } = useQuery({queryKey: ['images'], queryFn: fetchImages});
+    const { data: images, isLoading } = useQuery({queryKey: ['images'], queryFn: fetchImages});
 
     return (
         <div className={"h-full bg-[#314840]"}>
@@ -24,9 +25,17 @@ const Photo = () => {
                     columnsCountBreakPoints={{350: 3, 750: 2, 900: 7}}
                 >
                     <Masonry gutter="10px">
-                        {images?.map((url, index) => (
+                        {isLoading ? (
+                        Array.from({ length: 30 }).map((_, index) => {
+                            return (
+                                <Skeleton key={index} className={`w-28 h-28 sm:w-60 sm:h-48 rounded-xl`} />
+                            );
+                        })
+                    ) : (
+                        images?.map((url, index) => (
                             <img key={index} className="w-full rounded-lg" src={url} alt="Uploaded"/>
-                        ))}
+                        ))
+                    )}
                     </Masonry>
                 </ResponsiveMasonry>
             </div>
