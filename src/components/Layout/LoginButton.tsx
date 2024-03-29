@@ -14,11 +14,6 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { fsauth } from "../../../firebase/firebase.ts";
 
-const errorMessage = {
-    'auth/user-not-found': 'User not found.',
-    'auth/wrong-password': 'Wrong password.',
-};
-
 const LoginButton = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -37,14 +32,14 @@ const LoginButton = () => {
             setOpen(false)
             navigate('/');
         } catch (error) {
-            alert(errorMessage[error.code] || 'Login failed.');
+            alert('Login failed.');
         }
     };
 
     return (
-        <Dialog open={open}>
+        <Dialog open={open}  onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div onClick={() => setOpen(true)}>Login</div>
+                <div>Login</div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

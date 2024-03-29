@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {NavLink} from "react-router-dom";
 import {
     Sheet,
@@ -7,8 +8,18 @@ import {
 } from "../ui/sheet"
 import MenuIcon from "@mui/icons-material/Menu";
 import LoginButton from "./LoginButton.tsx";
+import LogoutButton from "./LogoutButoon.tsx";
+import { fsauth } from "../../../firebase/firebase.ts";
 
 const SheetButton = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const unsubscribe = fsauth.onAuthStateChanged(user => {
+            setIsLoggedIn(!!user);
+        });
+        return () => unsubscribe(); // 구독 해제
+    }, []);
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -26,7 +37,7 @@ const SheetButton = () => {
                         <NavLink to={"/"}>Diary</NavLink>
                     </SheetClose>
                     <SheetClose asChild>
-                        <LoginButton />
+                        {isLoggedIn ? <LogoutButton /> : <LoginButton />}
                     </SheetClose>
                 </div>
             </SheetContent>
