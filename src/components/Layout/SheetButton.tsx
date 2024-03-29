@@ -34,7 +34,7 @@ const SheetButton = () => {
                     <NavLink to={"/photo"}>Photo</NavLink>
                     </SheetClose>
                     <SheetClose asChild>
-                        <NavLink to={"/"}>Diary</NavLink>
+                        <NavLink to={"/diary"}>Diary</NavLink>
                     </SheetClose>
                     <SheetClose asChild>
                         {isLoggedIn ? <LogoutButton /> : <LoginButton />}
