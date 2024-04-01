@@ -1,7 +1,25 @@
-import AddIcon from '@mui/icons-material/Add';
 import {NavLink} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {fsdb} from "../../../firebase/firebase";
+import {getDocs, collection} from "firebase/firestore"
+import AddIcon from '@mui/icons-material/Add';
 
 const Diary = () => {
+    const [entries, setEntries] = useState([]);
+
+    useEffect(() => {
+        const fetchEntries = async () => {
+            const querySnapshot = await getDocs(collection(fsdb, "getDiary"));
+            const entriesList = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setEntries(entriesList);
+            console.log(entries)
+        };
+
+        fetchEntries();
+    }, []);
 
     return (
         <div className={"bg-[#314840] h-screen"}>
@@ -9,13 +27,15 @@ const Diary = () => {
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Diary</div>
             <NavLink to={"write"} className={"flex justify-end text-white pb-2 px-2"} ><AddIcon fontSize={"large"} /></NavLink>
             <div className={"grid gap-4 px-2 pb-4"}>
-                <div className={"grid p-4 bg-gray-50 rounded-md gap-1"}>
-                    <div className={"text-2xl"}>아 날씨 좋다</div>
+                {entries?.map(item => (
+                    <NavLink key={item.id} to={`/diary/${item.id}`} className={"grid p-4 bg-gray-50 rounded-md gap-1"}>
+                    <div className={"text-2xl"}>{item.title}</div>
                     <div className={"flex justify-between"}>
-                        <div className={"text-xs"}>작성자: 황재연</div>
-                        <div className={"text-xs"}>날짜: 2024-12-11</div>
+                        <div className={"text-xs"}>작성자: {item.name}</div>
+                        <div className={"text-xs"}>날짜: {new Date(item.date.seconds * 1000).toLocaleDateString()}</div>
                     </div>
-                </div>
+                    </NavLink>
+                ))}
             </div>
         </div>
     )
