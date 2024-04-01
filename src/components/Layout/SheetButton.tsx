@@ -7,9 +7,9 @@ import {
     SheetClose
 } from "../ui/sheet"
 import MenuIcon from "@mui/icons-material/Menu";
-import LoginButton from "./LoginButton.tsx";
-import LogoutButton from "./LogoutButoon.tsx";
-import { fsauth } from "../../../firebase/firebase.ts";
+import LoginButton from "./LoginButton";
+import LogoutButton from "./LogoutButoon";
+import { fsauth } from "../../../firebase/firebase";
 
 const SheetButton = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);

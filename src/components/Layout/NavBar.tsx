@@ -1,6 +1,6 @@
 import  { useState, useEffect } from 'react';
 import {NavLink} from "react-router-dom";
-import SheetButton from "./SheetButton.tsx";
+import SheetButton from "./SheetButton";
 const NavBar = () => {
     const [scrolled, setScrolled] = useState(false);
 

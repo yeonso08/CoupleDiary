@@ -35,7 +35,7 @@ const Home = () => {
         <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
             <div className={""}>
             <p className="text-white sm:text-6xl text-4xl font-medium">JI MIN & JAE YEON</p>
-            <p className={"text-white sm:text-4xl text-3xl font-medium"}>D + 110</p>
+            <p className={"text-white sm:text-4xl text-3xl font-medium"}>D + 113</p>
             </div>
         </div>
     </div>

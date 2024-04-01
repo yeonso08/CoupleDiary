@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from "../pages/Home";
-import Layout from "../components/Layout/Layout.tsx";
+import Layout from "../components/Layout/Layout";
 import Photo from "../pages/Photo";
-import Diary from "../pages/Diary/Diary.tsx";
-import DiaryDetail from "../pages/Diary/DiaryDetail.tsx";
-import DiaryWrite from "../pages/Diary/DiaryWrite.tsx";
+import Diary from "../pages/Diary/Diary";
+import DiaryDetail from "../pages/Diary/DiaryDetail";
+import DiaryWrite from "../pages/Diary/DiaryWrite";
 
 const AppRoutes = () => {
     return (

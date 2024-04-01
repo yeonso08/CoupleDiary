@@ -8,7 +8,7 @@ import {
     DialogTrigger,
     DialogClose,
 } from "../ui/dialog";
-import { fsauth } from "../../../firebase/firebase.ts";
+import { fsauth } from "../../../firebase/firebase";
 const LogoutButton = () => {
     const logout = async () => {
         try {

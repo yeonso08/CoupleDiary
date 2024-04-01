@@ -3,7 +3,7 @@ import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry';
 import {fstorage} from '../../../firebase/firebase';
 import {getDownloadURL, listAll, ref} from 'firebase/storage';
 import {useQuery} from '@tanstack/react-query';
-import {Skeleton} from "../../components/ui/skeleton.tsx";
+import {Skeleton} from "../../components/ui/skeleton";
 import CloseIcon from '@mui/icons-material/Close';
 
 const fetchImages = async () => {

@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { fsauth } from "../../../firebase/firebase.ts";
+import { fsauth } from "../../../firebase/firebase";
 
 const LoginButton = () => {
     const [email, setEmail] = useState('');
