@@ -1,7 +1,8 @@
 const DiaryWrite = () => {
     return (
-        <div>
-            DiaryWrite
+        <div className={"bg-[#314840] h-screen"}>
+            <div className={"p-24"}/>
+
         </div>
     )
 }
