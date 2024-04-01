@@ -29,7 +29,7 @@ const NavBar = () => {
                     <div className={" gap-10 pr-24 sm:flex hidden"}>
                     <NavLink to={"/"}>Home</NavLink>
                     <NavLink to={"/photo"}>Photo</NavLink>
-                    <NavLink to={"/"}>Diary</NavLink>
+                    <NavLink to={"/diary"}>Diary</NavLink>
                     </div>
                     <div className={"sm:hidden"}>
                         <SheetButton />
