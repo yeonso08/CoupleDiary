@@ -10,7 +10,7 @@ interface DiaryEntry {
     title: string;
     name: string;
     content: string;
-    date: { seconds: number };
+    createdAt: { seconds: number };
 }
 
 const fetchDiaryEntry = async (id: string) => {
@@ -46,7 +46,7 @@ const DiaryDetail = () => {
                         {entry?.title}
                     </div>
                     <div className={"flex justify-end"}>
-                        {entry?.date ? new Date(entry.date.seconds * 1000).toLocaleDateString() : '날짜 없음'}
+                        {entry?.createdAt ? new Date(entry.createdAt.seconds * 1000).toLocaleDateString() : '날짜 없음'}
                     </div>
                     <div className={"grid gap-2"}>
                         <div>내용</div>

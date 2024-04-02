@@ -8,7 +8,7 @@ interface DiaryEntry {
     id: string;
     title: string;
     name: string;
-    date: { seconds: number };
+    createdAt: { seconds: number };
 }
 
 const fetchEntries = async (): Promise<DiaryEntry[]> => {
@@ -33,7 +33,7 @@ const Diary = () => {
                         <div className={"text-2xl"}>{item.title}</div>
                         <div className={"flex justify-between"}>
                             <div className={"text-xs"}>작성자: {item.name}</div>
-                            <div className={"text-xs"}>날짜: {new Date(item.date.seconds * 1000).toLocaleDateString()}</div>
+                            <div className={"text-xs"}>날짜: {new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</div>
                         </div>
                     </NavLink>
                 ))}

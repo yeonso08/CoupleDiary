@@ -1,6 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { addDoc, collection } from "firebase/firestore";
+import { fsdb } from "../../../firebase/firebase";
 
 import { Button } from "../../components/ui/button"
 import {
@@ -15,10 +18,10 @@ import { Input } from "../../components/ui/input"
 import { Textarea } from "../../components/ui/textarea"
 
 const FormSchema = z.object({
-    username: z.string().min(1, {
+    title: z.string().min(1, {
         message: "최소 한 글자 이상 작성하세요.",
     }),
-    bio: z
+    content: z
         .string()
         .min(1, {
             message: "최소 한 글자 이상 작성하세요.",
@@ -29,18 +32,27 @@ const FormSchema = z.object({
 })
 
 const DiaryWrite = () => {
+    const navigate = useNavigate();
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            username: "",
-            bio: "",
+            title: "",
+            content: "",
         },
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        console.log('제목:', data.username);
-        console.log('내용:', data.bio);
-    }
+    const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+        try {
+            await addDoc(collection(fsdb, "getDiary"), {
+                title: data.title,
+                content: data.content,
+                createdAt: new Date()
+            });
+            navigate('/diary');
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+    };
 
     return (
         <div className={"bg-[#314840] h-screen"}>
@@ -50,7 +62,7 @@ const DiaryWrite = () => {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 space-y-6">
                     <FormField
                         control={form.control}
-                        name="username"
+                        name="title"
                         render={({field}) => (
                             <FormItem>
                                 <FormLabel className={"text-white"}>제목</FormLabel>
@@ -63,7 +75,7 @@ const DiaryWrite = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="bio"
+                        name="content"
                         render={({field}) => (
                             <FormItem>
                                 <FormLabel className={"text-white"}>내용</FormLabel>
