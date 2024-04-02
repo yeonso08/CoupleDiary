@@ -9,11 +9,15 @@ import {
     DialogClose,
 } from "../ui/dialog";
 import { fsauth } from "../../../firebase/firebase";
-const LogoutButton = () => {
+const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
     const logout = async () => {
         try {
             await fsauth.signOut()
             // 세션 스토리지에서 토큰 제거s
+            if (onLogout) {
+                onLogout();  // 로그인 성공 후 onLogin 함수 호출
+            }
+
             sessionStorage.removeItem('idToken');
             sessionStorage.removeItem('refreshToken');
 
@@ -28,7 +32,7 @@ const LogoutButton = () => {
             <DialogTrigger asChild>
                 <div>Logout</div>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="rounded-lg">
                 <DialogHeader>
                     <DialogTitle>Logout</DialogTitle>
                 </DialogHeader>
