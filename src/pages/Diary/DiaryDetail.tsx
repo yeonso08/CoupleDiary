@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { doc, getDoc, deleteDoc  } from "firebase/firestore";
-import { fsdb } from "../../../firebase/firebase";
+import {fsauth, fsdb} from "../../../firebase/firebase";
 import {Button} from "../../components/ui/button";
 
 interface DiaryEntry {
@@ -10,6 +11,7 @@ interface DiaryEntry {
     name: string;
     content: string;
     createdAt: { seconds: number };
+    userId: string;
 }
 
 const fetchDiaryEntry = async (id: string) => {
@@ -26,6 +28,11 @@ const fetchDiaryEntry = async (id: string) => {
 const DiaryDetail = () => {
     const { id } = useParams<{ id?: string }>();
     const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState<string | null>(null);
+
+    useEffect(() => {
+        setCurrentUser(fsauth.currentUser?.uid || null);
+    }, []);
 
     const { data: entry } = useQuery({
         queryKey: ['entry', id],
@@ -51,6 +58,8 @@ const DiaryDetail = () => {
         }
     };
 
+    const isOwner = entry?.userId === currentUser;
+
     return (
         <div className={"bg-[#314840] h-screen"}>
             <div className={"p-16"} />
@@ -73,12 +82,14 @@ const DiaryDetail = () => {
                             {entry?.content}
                         </div>
                     </div>
-                    <div className={"flex pt-3 gap-2"}>
+                    {isOwner && (
+                        <div className={"flex pt-3 gap-2"}>
                     <NavLink to={`/diary/modify/${entry?.id}`} className={"w-full"}>
                         <Button type="submit" className={"w-full"}>수정</Button>
                     </NavLink>
                         <Button type="button" onClick={deleteEntry} className={"w-full"}>삭제</Button>
                     </div>
+                    )}
                 </div>
             </div>
         </div>

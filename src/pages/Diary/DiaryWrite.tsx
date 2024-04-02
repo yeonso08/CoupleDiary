@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { addDoc, collection } from "firebase/firestore";
-import { fsdb } from "../../../firebase/firebase";
+import {fsauth, fsdb} from "../../../firebase/firebase";
 
 import { Button } from "../../components/ui/button"
 import {
@@ -42,16 +42,21 @@ const DiaryWrite = () => {
     })
 
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-        try {
+        const user = fsauth.currentUser;
+
+        if (user) {
+            try {
             await addDoc(collection(fsdb, "getDiary"), {
                 title: data.title,
                 content: data.content,
                 createdAt: new Date(),
-                name: sessionStorage.getItem("nickname")
+                name: sessionStorage.getItem("nickname"),
+                userId: user.uid,
             });
             navigate('/diary');
         } catch (error) {
             console.error("Error adding document: ", error);
+        }
         }
     };
 
