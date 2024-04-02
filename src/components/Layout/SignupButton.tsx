@@ -28,6 +28,7 @@ const SignupButton = () => {
 
             setOpen(false);
             navigate('/');
+            alert('가입 되었습니다.');
         } catch (error) {
             alert('가입 실패 했습니다.');
         }
@@ -35,8 +36,8 @@ const SignupButton = () => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <div>Signup</div>
+            <DialogTrigger asChild className={"w-full"}>
+                <Button>Signup</Button>
             </DialogTrigger>
             <DialogContent className="rounded-lg">
                 <DialogHeader>

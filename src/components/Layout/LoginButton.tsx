@@ -13,6 +13,7 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { fsauth } from "../../../firebase/firebase";
+import SignupButton from "./SignupButton";
 
 const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop 추가
     const [email, setEmail] = useState('');
@@ -82,7 +83,10 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop �
                         />
                     </div>
                     <DialogFooter>
-                        <Button type="submit">Login</Button>
+                        <div className={"flex gap-2"}>
+                        <Button type="submit" className={"w-full"}>Login</Button>
+                        <SignupButton />
+                        </div>
                     </DialogFooter>
                 </form>
             </DialogContent>
