@@ -1,64 +1,53 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // react-router v6 사용 가정
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+
 import { Button } from "../ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { fsauth } from "../../../firebase/firebase";
 
-const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop 추가
+import { fsauth } from "../../../firebase/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+
+const SignupButton = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [nickname, setNickname] = useState('');
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
-    const login = async () => {
+    const signup = async () => {
         try {
-            const { user } = await signInWithEmailAndPassword(fsauth, email, password);
-            const idToken = await user.getIdToken(); // 사용자의 ID 토큰 가져오기
-            const refreshToken = user.refreshToken; // 사용자의 Refresh 토큰 가져오기
+            const userCredential = await createUserWithEmailAndPassword(fsauth, email, password);
+            const user = userCredential.user;
 
-            // 세션 스토리지에 토큰 저장
-            sessionStorage.setItem('idToken', idToken);
-            sessionStorage.setItem('refreshToken', refreshToken);
-            sessionStorage.setItem('nickname', user.displayName || '익명');
+            // 사용자 프로필 업데이트에 닉네임 추가
+            await updateProfile(user, {
+                displayName: nickname
+            });
 
-            if (onLogin) {
-                onLogin();  // 로그인 성공 후 onLogin 함수 호출
-            }
-
-            setOpen(false)
+            setOpen(false);
             navigate('/');
         } catch (error) {
-            alert('Login failed.');
+            alert('Signup failed.');
         }
     };
 
     return (
-        <Dialog open={open}  onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div>Login</div>
+                <div>Signup</div>
             </DialogTrigger>
             <DialogContent className="rounded-lg">
                 <DialogHeader>
-                    <DialogTitle>Login</DialogTitle>
+                    <DialogTitle>Signup</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={(e) => {
                     e.preventDefault();
-                    login();
+                    signup();
                 }} className="grid gap-4 py-4">
                     <div className="grid grid-cols-8 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">
-                            ID
-                        </Label>
+                        <Label htmlFor="email" className="text-right">Email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -69,9 +58,7 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop �
                         />
                     </div>
                     <div className="grid grid-cols-8 items-center gap-4">
-                        <Label htmlFor="password" className="text-right">
-                            PW
-                        </Label>
+                        <Label htmlFor="password" className="text-right">Password</Label>
                         <Input
                             id="password"
                             type="password"
@@ -81,8 +68,19 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop �
                             required
                         />
                     </div>
+                    <div className="grid grid-cols-8 items-center gap-4">
+                        <Label htmlFor="nickname" className="text-right">Nickname</Label>
+                        <Input
+                            id="nickname"
+                            type="text"
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                            className="col-span-7"
+                            required
+                        />
+                    </div>
                     <DialogFooter>
-                        <Button type="submit">Login</Button>
+                        <Button type="submit">Signup</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -90,4 +88,4 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop �
     );
 };
 
-export default LoginButton;
+export default SignupButton;

@@ -20,6 +20,7 @@ const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
 
             sessionStorage.removeItem('idToken');
             sessionStorage.removeItem('refreshToken');
+            sessionStorage.removeItem('nickname');
 
             console.log('Logged out successfully');
         } catch (error) {

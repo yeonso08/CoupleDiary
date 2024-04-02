@@ -9,6 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButoon";
 import { fsauth } from "../../../firebase/firebase";
+import SignupButton from "./SignupButton";
 
 const SheetButton = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ const SheetButton = () => {
                     <NavLink to={"/photo"} onClick={closeSheet}>Photo</NavLink>
                     <NavLink to={"/diary"} onClick={closeSheet}>Diary</NavLink>
                     {isLoggedIn ? <LogoutButton onLogout={closeSheet} /> : <LoginButton onLogin={closeSheet} />}
+                    {isLoggedIn ? null : <SignupButton />}
                 </div>
             </SheetContent>
         </Sheet>

@@ -46,7 +46,8 @@ const DiaryWrite = () => {
             await addDoc(collection(fsdb, "getDiary"), {
                 title: data.title,
                 content: data.content,
-                createdAt: new Date()
+                createdAt: new Date(),
+                name: sessionStorage.getItem("nickname")
             });
             navigate('/diary');
         } catch (error) {
