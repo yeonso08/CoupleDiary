@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { doc, getDoc } from "firebase/firestore";
 import { fsdb } from "../../../firebase/firebase";
 import { NavLink } from "react-router-dom";
-
+import {Button} from "../../components/ui/button";
 
 interface DiaryEntry {
     id: string;
@@ -53,6 +53,12 @@ const DiaryDetail = () => {
                         <div className={"bg-white text-black p-2 rounded-md h-[40vh]"}>
                             {entry?.content}
                         </div>
+                    </div>
+                    <div className={"flex pt-3 gap-2"}>
+                    <NavLink to={`/diary/modify/${entry?.id}`} className={"w-full"}>
+                        <Button type="submit" className={"w-full"}>수정</Button>
+                    </NavLink>
+                        <Button type="submit" className={"w-full"}>삭제</Button>
                     </div>
                 </div>
             </div>
