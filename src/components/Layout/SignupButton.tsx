@@ -29,7 +29,7 @@ const SignupButton = () => {
             setOpen(false);
             navigate('/');
         } catch (error) {
-            alert('Signup failed.');
+            alert('가입 실패 했습니다.');
         }
     };
 
@@ -46,36 +46,37 @@ const SignupButton = () => {
                     e.preventDefault();
                     signup();
                 }} className="grid gap-4 py-4">
-                    <div className="grid grid-cols-8 items-center gap-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="email" className="text-right">Email</Label>
                         <Input
                             id="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="col-span-7"
+                            className="col-span-3"
+                            placeholder={"이메일 형식으로 입력해 주세요."}
                             required
                         />
                     </div>
-                    <div className="grid grid-cols-8 items-center gap-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="password" className="text-right">Password</Label>
                         <Input
                             id="password"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="col-span-7"
+                            className="col-span-3"
                             required
                         />
                     </div>
-                    <div className="grid grid-cols-8 items-center gap-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="nickname" className="text-right">Nickname</Label>
                         <Input
                             id="nickname"
                             type="text"
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
-                            className="col-span-7"
+                            className="col-span-3"
                             required
                         />
                     </div>
