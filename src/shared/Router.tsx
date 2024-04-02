@@ -5,7 +5,7 @@ import Photo from "../pages/Photo";
 import Diary from "../pages/Diary/Diary";
 import DiaryDetail from "../pages/Diary/DiaryDetail";
 import DiaryWrite from "../pages/Diary/DiaryWrite";
-
+import RequireAuth from './RequireAuth';
 const AppRoutes = () => {
     return (
 <Router>
@@ -13,9 +13,11 @@ const AppRoutes = () => {
         <Route element={<Layout /> }>
             <Route path={"/"} element={<Home />} />
             <Route path={"/photo"} element={<Photo />} />
-            <Route path={"/diary"} element={<Diary />} />
-            <Route path={"/diary/:id"} element={<DiaryDetail />} />
-            <Route path={"/diary/write"} element={<DiaryWrite />} />
+            <Route element={<RequireAuth />}>
+                <Route path={"/diary"} element={<Diary />} />
+                <Route path={"/diary/:id"} element={<DiaryDetail />} />
+                <Route path={"/diary/write"} element={<DiaryWrite />} />
+            </Route>
         </Route>
     </Routes>
 </Router>

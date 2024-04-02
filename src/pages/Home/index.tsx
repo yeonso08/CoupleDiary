@@ -3,29 +3,37 @@ import mainPhoto from '../../assets/mainPhoto.jpg';
 import mobileMainPhoto from '../../assets/mobileMainPhoto.jpg';
 
 const Home = () => {
-    const [imageSrc, setImageSrc] = useState(mainPhoto);
-    const [containerClass, setContainerClass] = useState("flex justify-center items-center h-screen bg-green-950");
+    const [imageSrc, setImageSrc] = useState<string>(mainPhoto);
+    const [containerClass, setContainerClass] = useState<string>("flex justify-center items-center h-screen bg-green-950");
+    const [daysTogether, setDaysTogether] = useState<number>(0);
 
     useEffect(() => {
-        // 브라우저 너비에 따라 이미지 소스 변경
+        // 사귄 일수 계산 (한국 시간 기준)
+        const calculateDaysTogether = (): void => {
+            const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
+            const now = new Date();
+            const currentKoreaTime = new Date(now.getTime() + (now.getTimezoneOffset() + koreaTimeOffset) * 60000);
+
+            const startDate = new Date("2023-12-11T00:00:00+09:00"); // 사귄 시작 날짜 (한국 시간 기준)
+            const timeDiff = currentKoreaTime.getTime() - startDate.getTime();
+            const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24)); // 일 단위로 변환
+            setDaysTogether(daysDiff + 1);
+        };
+
         const handleResize = () => {
             if (window.innerWidth <= 640) {
                 setImageSrc(mobileMainPhoto);
                 setContainerClass("flex justify-center items-center h-screen bg-[#314840]");
-
             } else {
                 setImageSrc(mainPhoto);
-                setContainerClass("");
+                setContainerClass("flex justify-center items-center h-screen bg-green-950");
             }
         };
 
-        // 컴포넌트 마운트 시 확인
+        calculateDaysTogether();
         handleResize();
 
-        // 윈도우 크기가 변경될 때마다 확인
         window.addEventListener('resize', handleResize);
-
-        // 컴포넌트 언마운트 시 이벤트 리스너 제거
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
@@ -35,7 +43,7 @@ const Home = () => {
         <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center">
             <div className={""}>
             <p className="text-white sm:text-6xl text-4xl font-medium">JI MIN & JAE YEON</p>
-            <p className={"text-white sm:text-4xl text-3xl font-medium"}>D + 113</p>
+                <p className="text-white sm:text-4xl text-3xl font-medium">D + {daysTogether}</p>
             </div>
         </div>
     </div>
