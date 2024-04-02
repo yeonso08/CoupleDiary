@@ -1,8 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc  } from "firebase/firestore";
 import { fsdb } from "../../../firebase/firebase";
-import { NavLink } from "react-router-dom";
 import {Button} from "../../components/ui/button";
 
 interface DiaryEntry {
@@ -26,11 +25,31 @@ const fetchDiaryEntry = async (id: string) => {
 
 const DiaryDetail = () => {
     const { id } = useParams<{ id?: string }>();
+    const navigate = useNavigate();
+
     const { data: entry } = useQuery({
         queryKey: ['entry', id],
         queryFn: () => id ? fetchDiaryEntry(id) : Promise.reject('No ID provided'),
         enabled: !!id  // id가 있을 때만 쿼리 실행
     });
+
+    const deleteEntry = async () => {
+        if (!id) {
+            alert("삭제에 실패했습니다.");
+            return;
+        }
+
+        if (window.confirm("삭제하시겠습니까?")) {
+        try {
+            await deleteDoc(doc(fsdb, "getDiary", id));
+            alert("삭제 성공 했습니다.");
+            navigate('/diary'); // 삭제 후 다이어리 목록 페이지로 이동
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+            alert("Failed to delete the document.");
+        }
+        }
+    };
 
     return (
         <div className={"bg-[#314840] h-screen"}>
@@ -58,7 +77,7 @@ const DiaryDetail = () => {
                     <NavLink to={`/diary/modify/${entry?.id}`} className={"w-full"}>
                         <Button type="submit" className={"w-full"}>수정</Button>
                     </NavLink>
-                        <Button type="submit" className={"w-full"}>삭제</Button>
+                        <Button type="button" onClick={deleteEntry} className={"w-full"}>삭제</Button>
                     </div>
                 </div>
             </div>
