@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // react-router v6 사용 가정
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
 import { Button } from "../ui/button";
 import {
     Dialog,
@@ -11,30 +14,51 @@ import {
     DialogTrigger,
 } from "../ui/dialog";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "../ui/form"
+
 import { fsauth } from "../../../firebase/firebase";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 import SignupButton from "./SignupButton";
 
+const FormSchema = z.object({
+    email: z.string()
+        .email({ message: "이메일 형식으로 입력해주세요." }),
+    password: z.string()
+        .min(8, { message: "8자리 이상으로 입력해주세요." }),
+})
+
 const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop 추가
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [open, setOpen] = useState(false);
     const [isSign, setIsSign] = useState(false);
     const navigate = useNavigate();
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    })
 
-    const login = async () => {
+    const login = async (data: z.infer<typeof FormSchema>) => {
         try {
-            const { user } = await signInWithEmailAndPassword(fsauth, email, password);
-            const idToken = await user.getIdToken(); // 사용자의 ID 토큰 가져오기
-            const refreshToken = user.refreshToken; // 사용자의 Refresh 토큰 가져오기
+            const { user } = await signInWithEmailAndPassword(fsauth, data.email, data.password);
+            const idToken = await user.getIdToken();
+            const refreshToken = user.refreshToken;
 
-            // 세션 스토리지에 토큰 저장
             sessionStorage.setItem('idToken', idToken);
             sessionStorage.setItem('refreshToken', refreshToken);
             sessionStorage.setItem('nickname', user.displayName || '익명');
 
             if (onLogin) {
-                onLogin();  // 로그인 성공 후 onLogin 함수 호출
+                onLogin();
             }
 
             setOpen(false)
@@ -52,45 +76,44 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop �
             {!isSign ?
             <DialogContent className="rounded-lg">
                 <DialogHeader>
-                    <DialogTitle>Login</DialogTitle>
+                    <DialogTitle>로그인</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    login();
-                }} className="grid gap-4 py-4">
-                    <div className="grid grid-cols-8 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">
-                            ID
-                        </Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="col-span-7"
-                            required
-                        />
-                    </div>
-                    <div className="grid grid-cols-8 items-center gap-4">
-                        <Label htmlFor="password" className="text-right">
-                            PW
-                        </Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="col-span-7"
-                            required
-                        />
-                    </div>
-                    <DialogFooter>
+                <Form {...form}>
+                <form onSubmit={form.handleSubmit(login)} className="grid gap-3 py-2">
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({field}) => (
+                            <FormItem className={"grid grid-cols-4 items-center"}>
+                                <FormLabel>아이디</FormLabel>
+                                <FormControl className={"col-span-3"}>
+                                    <Input type={"email"} placeholder="이메일로 입력 해주세요." {...field} />
+                                </FormControl>
+                                <FormMessage className={"col-span-4"}/>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({field}) => (
+                            <FormItem className={"grid grid-cols-4 items-center"}>
+                                <FormLabel>비밀번호</FormLabel>
+                                <FormControl className={"col-span-3"}>
+                                    <Input type={"password"} placeholder="8자리 이상으로 입력 해주세요." {...field} />
+                                </FormControl>
+                                <FormMessage className={"col-span-4"}/>
+                            </FormItem>
+                        )}
+                    />
+                    <DialogFooter className={"pt-3"}>
                         <div className={"flex gap-2"}>
-                            <Button type="submit" className={"w-full"}>Login</Button>
-                            <Button onClick={() => setIsSign(true)} className={"w-full"}>Signup</Button>
+                            <Button type="submit" className={"w-full"}>로그인</Button>
+                            <Button onClick={() => setIsSign(true)} className={"w-full"}>회원가입</Button>
                         </div>
                     </DialogFooter>
                 </form>
+                </Form>
             </DialogContent> :
             <SignupButton  />
             }

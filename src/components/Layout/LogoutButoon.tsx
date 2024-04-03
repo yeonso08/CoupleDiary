@@ -35,7 +35,7 @@ const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
             </DialogTrigger>
             <DialogContent className="rounded-lg">
                 <DialogHeader>
-                    <DialogTitle>Logout</DialogTitle>
+                    <DialogTitle>로그아웃</DialogTitle>
                 </DialogHeader>
                 <div className={"flex justify-center text-lg"}>
                     로그아웃 하시겠습니까 ?
@@ -43,10 +43,10 @@ const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
                 <DialogFooter>
                     <div className={"flex gap-4"}>
                         <DialogClose asChild>
-                            <Button className={"w-full"} onClick={logout}>Confirm</Button>
+                            <Button className={"w-full"} onClick={logout}>확인</Button>
                         </DialogClose>
                         <DialogClose asChild>
-                            <Button className={"w-full"}>Cancle</Button>
+                            <Button className={"w-full"}>취소</Button>
                         </DialogClose>
                     </div>
                 </DialogFooter>
