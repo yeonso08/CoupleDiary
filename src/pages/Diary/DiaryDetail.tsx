@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { doc, getDoc, deleteDoc  } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, increment, updateDoc } from "firebase/firestore";
 import {fsauth, fsdb} from "../../../firebase/firebase";
 import {Button} from "../../components/ui/button";
 
@@ -12,10 +12,12 @@ interface DiaryEntry {
     content: string;
     createdAt: { seconds: number };
     userId: string;
+    views: number;
 }
 
 const fetchDiaryEntry = async (id: string) => {
     const docRef = doc(fsdb, "getDiary", id);
+    await updateDoc(docRef, { views: increment(1) });
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -68,29 +70,32 @@ const DiaryDetail = () => {
                 <div className={"grid gap-2"}>
                     <div className={"flex justify-between"}>
                         <div>제목</div>
-                        <div>작성자: {entry?.name || "익명"}</div>
+                        <div>
+                            {entry?.createdAt ? new Date(entry.createdAt.seconds * 1000).toLocaleString('ko-KR', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) : '날짜 없음'}
+                        </div>
                     </div>
                     <div className={"bg-white text-black p-1 rounded-md"}>
                         {entry?.title}
                     </div>
-                    <div className={"flex justify-end"}>
-                        {entry?.createdAt ? new Date(entry.createdAt.seconds * 1000).toLocaleString('ko-KR', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        }) : '날짜 없음'}
+                    <div className={"flex justify-between"}>
+                        <div>작성자: {entry?.name || "익명"}</div>
+                        <div>조회수: {entry?.views || 0}</div>
                     </div>
-                    <div className={"grid gap-2"}>
-                        <div>내용</div>
+                    <div className={"grid gap-2 pt-2"}>
+                    <div>내용</div>
                         <div className={"bg-white text-black p-2 rounded-md h-[40vh]"}>
                             {entry?.content}
                         </div>
                     </div>
                     {isOwner && (
                         <div className={"flex pt-3 gap-2"}>
-                    <NavLink to={`/diary/modify/${entry?.id}`} className={"w-full"}>
+                            <NavLink to={`/diary/modify/${entry?.id}`} className={"w-full"}>
                         <Button type="submit" className={"w-full"}>수정</Button>
                     </NavLink>
                         <Button type="button" onClick={deleteEntry} className={"w-full"}>삭제</Button>
