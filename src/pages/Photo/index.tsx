@@ -1,11 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
+
 import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry';
-import {fstorage} from '../../../firebase/firebase';
-import {getDownloadURL, listAll, ref as storageRef, uploadBytes} from 'firebase/storage';
 import {useQuery, useQueryClient } from '@tanstack/react-query';
+
+import {fstorage} from '../../../firebase/firebase';
+import {getDownloadURL, listAll, ref as storageRef, uploadBytes, deleteObject} from 'firebase/storage';
+
 import {Skeleton} from "../../components/ui/skeleton";
+
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const fetchImages = async () => {
     const fileRef = storageRef(fstorage, '/jiminPhoto');
@@ -13,6 +18,11 @@ const fetchImages = async () => {
     return await Promise.all(
         result.items.map((item) => getDownloadURL(item))
     );
+};
+
+const getImageRefFromUrl = (url: string) => {
+    const imagePath = url.split('/o/')[1].split('?')[0];
+    return storageRef(fstorage, decodeURIComponent(imagePath));
 };
 
 const Photo = () => {
@@ -26,7 +36,7 @@ const Photo = () => {
         const files = event.target.files;
         if (files) {
             for (const file of files) {
-                const storagePath = `/test/${file.name}`;
+                const storagePath = `/jiminPhoto/${file.name}`;
                 const fileRef = storageRef(fstorage, storagePath);
 
                 try {
@@ -34,13 +44,26 @@ const Photo = () => {
                         queryClient.invalidateQueries({queryKey: ['images']})
                     )
                 } catch (error) {
-                    console.error('Error uploading file:', error);
-                    alert(`Failed to upload ${file.name}`);
+                    alert(`업로드 실패 ${file.name}`);
                 }
             }
-            alert('Selected photos have been uploaded.');
+            alert('업로드 성공.');
         }
     };
+    const deleteImage = async (url: string) => {
+        if (window.confirm("삭제 하시겠습니까?")) {
+            const imageRef = getImageRefFromUrl(url);
+            try {
+                await deleteObject(imageRef).then(() =>
+                    queryClient.invalidateQueries({queryKey: ['images']})
+                )
+                setSelectedImage(null)
+            } catch (error) {
+                alert('삭제 실패 했습니다.');
+            }
+        }
+    };
+
     const handleClickImage = (url: string) => {
         setSelectedImage(url);
     };
@@ -65,11 +88,15 @@ const Photo = () => {
                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
                         <div className="p-2 relative" ref={modalRef}>
                             <div className="absolute top-0 right-0 pt-4 pr-4">
+                                <button onClick={() => deleteImage(selectedImage)}>
+                                    <DeleteIcon />
+                                </button>
                                 <button onClick={() => setSelectedImage(null)}>
                                     <CloseIcon />
                                 </button>
                             </div>
-                            <img src={selectedImage} className="max-h-fit sm:h-[50vh] object-cover rounded-lg" alt="Selected"/>
+                            <img src={selectedImage} className="max-h-fit sm:h-[50vh] object-cover rounded-lg"
+                                 alt="Selected"/>
                         </div>
                     </div>
                 )
@@ -77,9 +104,8 @@ const Photo = () => {
 
             <div className={"p-20"}/>
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Photo</div>
-            <div className={"flex justify-end"}>
+            <div className={"flex justify-end pb-2 text-white"}>
                 <button
-                    className="text-white pb-2 px-2"
                     onClick={() => fileInputRef.current?.click()}
                 >
                     <AddIcon fontSize="large"/>
@@ -94,11 +120,11 @@ const Photo = () => {
                 />
             </div>
             <div className={"px-2 pb-4"}>
-            <ResponsiveMasonry
+                <ResponsiveMasonry
                     columnsCountBreakPoints={{350: 3, 750: 2, 900: 7}}
                 >
                     <Masonry gutter="10px">
-                        {isLoading ? (
+                    {isLoading ? (
                             Array.from({ length: 30 }).map((_, index) => (
                                 <Skeleton key={index} className={`w-28 h-28 sm:w-60 sm:h-48 rounded-xl`} />
                             ))
