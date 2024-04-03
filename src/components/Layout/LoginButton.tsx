@@ -19,6 +19,7 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop ์
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [open, setOpen] = useState(false);
+    const [isSign, setIsSign] = useState(false);
     const navigate = useNavigate();
 
     const login = async () => {
@@ -39,15 +40,16 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop ์
             setOpen(false)
             navigate('/');
         } catch (error) {
-            alert('Login failed.');
+            alert('๋ก๊ทธ์ธ ์คํจ.');
         }
     };
 
     return (
         <Dialog open={open}  onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div>Login</div>
+                <div onClick={() => setIsSign(false)}>Login</div>
             </DialogTrigger>
+            {!isSign ?
             <DialogContent className="rounded-lg">
                 <DialogHeader>
                     <DialogTitle>Login</DialogTitle>
@@ -84,12 +86,14 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop ์
                     </div>
                     <DialogFooter>
                         <div className={"flex gap-2"}>
-                        <Button type="submit" className={"w-full"}>Login</Button>
-                        <SignupButton  />
+                            <Button type="submit" className={"w-full"}>Login</Button>
+                            <Button onClick={() => setIsSign(true)} className={"w-full"}>Signup</Button>
                         </div>
                     </DialogFooter>
                 </form>
-            </DialogContent>
+            </DialogContent> :
+            <SignupButton  />
+            }
         </Dialog>
     );
 };

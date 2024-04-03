@@ -1,32 +1,56 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import {  DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "../ui/form"
 
 import { fsauth } from "../../../firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
-const SignupButton = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [nickname, setNickname] = useState('');
-    const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
+const FormSchema = z.object({
+    email: z.string()
+        .email({ message: "이메일 형식으로 입력해주세요." }),
+    password: z.string()
+        .min(8, { message: "8자리 이상으로 입력해주세요." }),
+    nickName: z.string()
+        .min(2, {
+            message: "최소 두 글자 이상 입력하세요.",
+        })
+        .max(10, { message: "10자 미만으로 입력해주세요" })
+})
 
-    const signup = async () => {
+const SignupButton = () => {
+    const navigate = useNavigate();
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+            nickName: "",
+        },
+    })
+    const signup =  async (data: z.infer<typeof FormSchema>) => {
         try {
-            const userCredential = await createUserWithEmailAndPassword(fsauth, email, password);
+            const userCredential = await createUserWithEmailAndPassword(fsauth, data.email, data.password);
             const user = userCredential.user;
 
             // 사용자 프로필 업데이트에 닉네임 추가
             await updateProfile(user, {
-                displayName: nickname
+                displayName: data.nickName
             });
 
-            setOpen(false);
             navigate('/');
             alert('가입 되었습니다.');
         } catch (error) {
@@ -35,58 +59,57 @@ const SignupButton = () => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild className={"w-full"}>
-                <Button>Signup</Button>
-            </DialogTrigger>
             <DialogContent className="rounded-lg">
                 <DialogHeader>
-                    <DialogTitle>Signup</DialogTitle>
+                    <DialogTitle>회원가입</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    signup();
-                }} className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="col-span-3"
-                            placeholder={"이메일 형식으로 입력해 주세요."}
-                            required
+                <Form {...form}>
+                <form onSubmit={form.handleSubmit(signup)} className="grid gap-3 py-2">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({field}) => (
+                                <FormItem className={"grid grid-cols-4 items-center"}>
+                                    <FormLabel>아이디</FormLabel>
+                                    <FormControl className={"col-span-3"}>
+                                        <Input type={"email"} placeholder="이메일로 입력 해주세요." {...field} />
+                                    </FormControl>
+                                    <FormMessage className={"col-span-4"}/>
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="password" className="text-right">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="col-span-3"
-                            required
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="nickname" className="text-right">Nickname</Label>
-                        <Input
-                            id="nickname"
-                            type="text"
-                            value={nickname}
-                            onChange={(e) => setNickname(e.target.value)}
-                            className="col-span-3"
-                            required
-                        />
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit">Signup</Button>
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({field}) => (
+                            <FormItem className={"grid grid-cols-4 items-center"}>
+                                <FormLabel>비밀번호</FormLabel>
+                                <FormControl className={"col-span-3"}>
+                                    <Input type={"password"} placeholder="8자리 이상으로 입력 해주세요." {...field} />
+                                </FormControl>
+                                <FormMessage className={"col-span-4"}/>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="nickName"
+                        render={({field}) => (
+                            <FormItem className={"grid grid-cols-4 items-center"}>
+                                <FormLabel>닉네임</FormLabel>
+                                <FormControl className={"col-span-3"}>
+                                    <Input type={"text"} placeholder="닉네임을 입력 해주세요." {...field} />
+                                </FormControl>
+                                <FormMessage className={"col-span-4"}/>
+                            </FormItem>
+                        )}
+                    />
+                    <DialogFooter className={"pt-3"}>
+                        <Button type="submit">확인</Button>
                     </DialogFooter>
                 </form>
+                </Form>
             </DialogContent>
-        </Dialog>
     );
 };
 
