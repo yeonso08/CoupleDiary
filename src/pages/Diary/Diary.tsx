@@ -23,11 +23,11 @@ const Diary = () => {
     const { data: entries } = useQuery({ queryKey: ['entries'], queryFn: fetchEntries });
 
     return (
-        <div className={"bg-[#314840] h-screen"}>
+        <div className="bg-[#314840] h-screen overflow-hidden">
             <div className={"p-24"} />
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Diary</div>
             <NavLink to={"write"} className={"flex justify-end text-white pb-2 px-2"} ><AddIcon fontSize={"large"} /></NavLink>
-            <div className={"grid gap-4 px-2 pb-4"}>
+            <div className="grid gap-4 px-2 pb-4 overflow-auto max-h-[calc(100vh-360px)]">
                 {entries?.map(item => (
                     <NavLink key={item.id} to={`/diary/${item.id}`} className={"grid p-4 bg-gray-50 rounded-md gap-1"}>
                         <div className={"text-2xl"}>{item.title}</div>
