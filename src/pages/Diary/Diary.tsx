@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { fsdb } from "../../../firebase/firebase";
-import { getDocs, collection } from "firebase/firestore"
+import { getDocs, collection, orderBy, query } from "firebase/firestore"
 import AddIcon from '@mui/icons-material/Add';
 
 interface DiaryEntry {
@@ -12,7 +12,8 @@ interface DiaryEntry {
 }
 
 const fetchEntries = async (): Promise<DiaryEntry[]> => {
-    const querySnapshot = await getDocs(collection(fsdb, "getDiary"));
+    const q = query(collection(fsdb, "getDiary"), orderBy("createdAt", "desc")); // 최신 순으로 정렬
+    const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -24,7 +25,7 @@ const Diary = () => {
 
     return (
         <div className="bg-[#314840] h-screen overflow-hidden">
-            <div className={"p-24"} />
+            <div className={"p-20"} />
             <div className={"flex justify-center text-6xl text-white font-semibold mb-16"}>Diary</div>
             <NavLink to={"write"} className={"flex justify-end text-white pb-2 px-2"} ><AddIcon fontSize={"large"} /></NavLink>
             <div className="grid gap-4 px-2 pb-4 overflow-auto max-h-[calc(100vh-360px)]">
