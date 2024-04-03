@@ -32,7 +32,7 @@ const Diary = () => {
                     <NavLink key={item.id} to={`/diary/${item.id}`} className={"grid p-4 bg-gray-50 rounded-md gap-1"}>
                         <div className={"text-2xl"}>{item.title}</div>
                         <div className={"flex justify-between"}>
-                            <div className={"text-xs"}>작성자: {item.name}</div>
+                            <div className={"text-xs"}>작성자: {item.name || "익명"}</div>
                             <div className={"text-xs"}>날짜: {new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</div>
                         </div>
                     </NavLink>

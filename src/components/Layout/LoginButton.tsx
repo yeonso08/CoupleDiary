@@ -85,7 +85,7 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop ì
                     <DialogFooter>
                         <div className={"flex gap-2"}>
                         <Button type="submit" className={"w-full"}>Login</Button>
-                        <SignupButton />
+                        <SignupButton  />
                         </div>
                     </DialogFooter>
                 </form>

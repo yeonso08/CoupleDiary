@@ -68,13 +68,19 @@ const DiaryDetail = () => {
                 <div className={"grid gap-2"}>
                     <div className={"flex justify-between"}>
                         <div>제목</div>
-                        <div>작성자: {entry?.name}</div>
+                        <div>작성자: {entry?.name || "익명"}</div>
                     </div>
                     <div className={"bg-white text-black p-1 rounded-md"}>
                         {entry?.title}
                     </div>
                     <div className={"flex justify-end"}>
-                        {entry?.createdAt ? new Date(entry.createdAt.seconds * 1000).toLocaleDateString() : '날짜 없음'}
+                        {entry?.createdAt ? new Date(entry.createdAt.seconds * 1000).toLocaleString('ko-KR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : '날짜 없음'}
                     </div>
                     <div className={"grid gap-2"}>
                         <div>내용</div>
