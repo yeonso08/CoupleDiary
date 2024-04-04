@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry';
 import {useQuery, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
 
 import {fstorage} from '../../../firebase/firebase';
 import {getDownloadURL, listAll, ref as storageRef, uploadBytes, deleteObject} from 'firebase/storage';
@@ -15,9 +16,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const fetchImages = async () => {
     const fileRef = storageRef(fstorage, '/jiminPhoto');
     const result = await listAll(fileRef);
-    return await Promise.all(
+    const files = await Promise.all(
         result.items.map((item) => getDownloadURL(item))
     );
+    return files.sort((a, b) => a.localeCompare(b));
 };
 
 const getImageRefFromUrl = (url: string) => {
@@ -36,7 +38,8 @@ const Photo = () => {
         const files = event.target.files;
         if (files) {
             for (const file of files) {
-                const storagePath = `/jiminPhoto/${file.name}`;
+                const timestamp = format(new Date(), 'yyyyMMddHHmmss');
+                const storagePath = `/jiminPhoto/${timestamp}-${file.name}`;
                 const fileRef = storageRef(fstorage, storagePath);
 
                 try {
@@ -44,6 +47,7 @@ const Photo = () => {
                         queryClient.invalidateQueries({queryKey: ['images']})
                     )
                 } catch (error) {
+                    console.error('Error uploading file:', error);
                     alert(`업로드 실패 ${file.name}`);
                 }
             }
@@ -124,7 +128,7 @@ const Photo = () => {
                     columnsCountBreakPoints={{350: 3, 750: 2, 900: 7}}
                 >
                     <Masonry gutter="10px">
-                    {isLoading ? (
+                        {isLoading ? (
                             Array.from({ length: 30 }).map((_, index) => (
                                 <Skeleton key={index} className={`w-28 h-28 sm:w-60 sm:h-48 rounded-xl`} />
                             ))
