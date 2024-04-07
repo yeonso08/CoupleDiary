@@ -26,8 +26,8 @@ const FormSchema = z.object({
         .min(1, {
             message: "최소 한 글자 이상 작성하세요.",
         })
-        .max(500, {
-            message: "500자 미만으로 작성하세요.",
+        .max(1000, {
+            message: "1000자 미만으로 작성하세요.",
         }),
 })
 
