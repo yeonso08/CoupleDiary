@@ -87,7 +87,7 @@ const DiaryWrite = () => {
                                 <FormLabel className={"text-white"}>내용</FormLabel>
                                 <Textarea
                                     placeholder="내용을 입력 해주세요."
-                                    className="resize-none h-[40vh]"
+                                    className="resize-none h-[40vh] overflow-y-scroll"
                                     {...field}
                                 />
                                 <FormMessage/>
