@@ -86,7 +86,7 @@ const Photo = () => {
     }, [modalRef]);
 
     return (
-        <div className={"h-full bg-[#314840]"}>
+        <div className={"h-full bg-pink-200"}>
             {
                 selectedImage && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">

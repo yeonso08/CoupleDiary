@@ -63,7 +63,7 @@ const DiaryDetail = () => {
     const isOwner = entry?.userId === currentUser;
 
     return (
-        <div className={"bg-[#314840] h-screen"}>
+        <div className={"bg-pink-200 h-screen"}>
             <div className={"p-16"} />
             <NavLink to={"/diary"} className={"flex justify-center text-6xl text-white font-semibold mb-8"}>Diary</NavLink>
             <div className={"text-white p-2"}>

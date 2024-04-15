@@ -4,7 +4,7 @@ import mobileMainPhoto from '../../assets/mobileMainPhoto.jpg';
 
 const Home = () => {
     const [imageSrc, setImageSrc] = useState<string>(mainPhoto);
-    const [containerClass, setContainerClass] = useState<string>("flex justify-center items-center h-screen bg-green-950");
+    const [containerClass, setContainerClass] = useState<string>("flex justify-center items-center h-screen bg-pink-200");
     const [daysTogether, setDaysTogether] = useState<number>(0);
 
     useEffect(() => {
@@ -23,10 +23,10 @@ const Home = () => {
         const handleResize = () => {
             if (window.innerWidth <= 640) {
                 setImageSrc(mobileMainPhoto);
-                setContainerClass("flex justify-center items-center h-screen bg-[#314840]");
+                setContainerClass("flex justify-center items-center h-screen bg-pink-200");
             } else {
                 setImageSrc(mainPhoto);
-                setContainerClass("flex justify-center items-center h-screen bg-green-950");
+                setContainerClass("flex justify-center items-center h-screen bg-pink-200");
             }
         };
 

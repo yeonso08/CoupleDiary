@@ -70,7 +70,7 @@ const DiaryModify = () => {
     };
 
     return (
-        <div className={"bg-[#314840] h-screen"}>
+        <div className={"bg-pink-200 h-screen"}>
             <div className={"p-16"} />
             <div className={"flex justify-center text-6xl text-white font-semibold "}>Modify</div>
             <Form {...form}>
