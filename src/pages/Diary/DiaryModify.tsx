@@ -13,7 +13,7 @@ import { Textarea } from "../../components/ui/textarea";
 
 const FormSchema = z.object({
     title: z.string().min(1, "최소 한 글자 이상 작성하세요."),
-    content: z.string().min(1, "최소 한 글자 이상 작성하세요.").max(500, "500자 미만으로 작성하세요."),
+    content: z.string().min(1, "최소 한 글자 이상 작성하세요.").max(5000, "5000자 미만으로 작성하세요."),
 });
 
 const DiaryModify = () => {
