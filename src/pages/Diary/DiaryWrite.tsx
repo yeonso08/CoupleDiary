@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from 'react-router-dom';
-import { useForm } from "react-hook-form"
+import { useNavigate } from 'react-router-dom'
+import { useForm, Controller  } from "react-hook-form"
 import { z } from "zod"
-import { addDoc, collection } from "firebase/firestore";
-import {fsauth, fsdb} from "../../../firebase/firebase";
+import { addDoc, collection } from "firebase/firestore"
+import {fsauth, fsdb} from "../../../firebase/firebase"
 
 import { Button } from "../../components/ui/button"
 import {
@@ -15,7 +15,8 @@ import {
     FormMessage,
 } from "../../components/ui/form"
 import { Input } from "../../components/ui/input"
-import { Textarea } from "../../components/ui/textarea"
+import WriteBox from "../../components/Diary/WriteBox";
+// import { Textarea } from "../../components/ui/textarea"
 
 const FormSchema = z.object({
     title: z.string().min(1, {
@@ -46,17 +47,17 @@ const DiaryWrite = () => {
 
         if (user) {
             try {
-            await addDoc(collection(fsdb, "getDiary"), {
-                title: data.title,
-                content: data.content,
-                createdAt: new Date(),
-                name: sessionStorage.getItem("nickname"),
-                userId: user.uid,
-            });
-            navigate('/diary');
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
+                await addDoc(collection(fsdb, "getDiary"), {
+                    title: data.title,
+                    content: data.content,
+                    createdAt: new Date(),
+                    name: sessionStorage.getItem("nickname"),
+                    userId: user.uid,
+                });
+                navigate('/diary');
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            }
         }
     };
 
@@ -79,20 +80,10 @@ const DiaryWrite = () => {
                             </FormItem>
                         )}
                     />
-                    <FormField
+                    <Controller
                         control={form.control}
                         name="content"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel className={"text-white"}>내용</FormLabel>
-                                <Textarea
-                                    placeholder="내용을 입력 해주세요."
-                                    className="resize-none h-[40vh] overflow-y-scroll"
-                                    {...field}
-                                />
-                                <FormMessage/>
-                            </FormItem>
-                        )}
+                        render={({ field }) => <WriteBox {...field} />}
                     />
                     <Button type="submit" className={"w-full"}>작성하기</Button>
                 </form>
