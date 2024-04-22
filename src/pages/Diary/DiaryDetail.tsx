@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { doc, getDoc, deleteDoc, increment, updateDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, increment, updateDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import {fsauth, fsdb} from "../../../firebase/firebase";
 import {Button} from "../../components/ui/button";
 
@@ -42,6 +42,16 @@ const DiaryDetail = () => {
         enabled: !!id  // id가 있을 때만 쿼리 실행
     });
 
+    const logDeletion = async (diaryId: string, diaryData: DiaryEntry) => {
+        const logRef = doc(fsdb, "deletionLogs", diaryId);
+        const logData = {
+            ...diaryData,
+            deletedAt: serverTimestamp(),
+            deletedBy: currentUser
+        };
+        await setDoc(logRef, logData);
+    };
+
     const deleteEntry = async () => {
         if (!id) {
             alert("삭제에 실패했습니다.");
@@ -49,14 +59,24 @@ const DiaryDetail = () => {
         }
 
         if (window.confirm("삭제하시겠습니까?")) {
-        try {
-            await deleteDoc(doc(fsdb, "getDiary", id));
-            alert("삭제 성공 했습니다.");
-            navigate('/diary'); // 삭제 후 다이어리 목록 페이지로 이동
-        } catch (error) {
-            console.error("Error deleting document: ", error);
-            alert("Failed to delete the document.");
-        }
+            try {
+                const diaryRef = doc(fsdb, "getDiary", id);
+                const diaryData = await getDoc(diaryRef);
+                if (diaryData.exists()) {
+                    // Type assertion to DiaryEntry
+                    const data = diaryData.data() as DiaryEntry;
+                    await deleteDoc(diaryRef);
+                    // Now passing the correctly typed data
+                    await logDeletion(id, data);
+                    alert("삭제 성공 했습니다.");
+                    navigate('/diary');
+                } else {
+                    alert("No such document!");
+                }
+            } catch (error) {
+                console.error("Error deleting document: ", error);
+                alert("Failed to delete the document.");
+            }
         }
     };
 
