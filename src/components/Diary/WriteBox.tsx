@@ -1,7 +1,7 @@
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from "react-quill";
 
-const WriteBox = ({ onChange, value }) => {
+const WriteBox = ({ onChange, value } : { onChange : () => void, value : string }) => {
     const modules = {
         toolbar: {
             container: [
