@@ -16,7 +16,6 @@ import {
 } from "../../components/ui/form"
 import { Input } from "../../components/ui/input"
 import WriteBox from "../../components/Diary/WriteBox";
-// import { Textarea } from "../../components/ui/textarea"
 
 const FormSchema = z.object({
     title: z.string().min(1, {

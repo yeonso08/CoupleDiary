@@ -110,7 +110,9 @@ const DiaryDetail = () => {
                     <div className={"grid gap-2 pt-2"}>
                     <div>내용</div>
                         <div className={"bg-white text-black p-2 rounded-md h-[40vh] overflow-y-scroll"}>
-                            {entry?.content}
+                            {entry?.content && (
+                                <div dangerouslySetInnerHTML={{ __html: entry.content }} />
+                            )}
                         </div>
                     </div>
                     {isOwner && (

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -9,7 +9,7 @@ import { fsdb } from "../../../firebase/firebase";
 import { Button } from "../../components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
+import WriteBox from "../../components/Diary/WriteBox";
 
 const FormSchema = z.object({
     title: z.string().min(1, "최소 한 글자 이상 작성하세요."),
@@ -25,7 +25,6 @@ const DiaryModify = () => {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
-
 
     useEffect(() => {
         const fetchEntry = async () => {
@@ -78,26 +77,20 @@ const DiaryModify = () => {
                     <FormField
                         control={form.control}
                         name="title"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel className={"text-white"}>제목</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input placeholder="제목을 입력 해주세요" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
-                    <FormField
+                    <Controller
                         control={form.control}
                         name="content"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className={"text-white"}>내용</FormLabel>
-                                <Textarea className="resize-none h-[40vh]" {...field} />
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        render={({field}) => <WriteBox {...field} />}
                     />
                     <Button type="submit" className={"w-full"}>수정하기</Button>
                 </form>
