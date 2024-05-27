@@ -34,8 +34,11 @@ const FormSchema = z.object({
     password: z.string()
         .min(8, { message: "8자리 이상으로 입력해주세요." }),
 })
+interface LoginButtonProps {
+    onLogin?: () => void;
+}
 
-const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop 추가
+const LoginButton = ({ onLogin } : LoginButtonProps) => {  // onLogin prop 추가
     const [open, setOpen] = useState(false);
     const [isSign, setIsSign] = useState(false);
     const navigate = useNavigate();

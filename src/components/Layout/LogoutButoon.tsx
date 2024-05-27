@@ -3,19 +3,20 @@ import {
     Dialog,
     DialogContent,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
     DialogClose,
 } from "../ui/dialog";
 import { fsauth } from "../../../firebase/firebase";
-const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
+
+interface LogoutButtonProps {
+    onLogout?: () => void;
+}
+const LogoutButton = ({ onLogout }: LogoutButtonProps) => {
     const logout = async () => {
         try {
             await fsauth.signOut()
-            // 세션 스토리지에서 토큰 제거s
             if (onLogout) {
-                onLogout();  // 로그인 성공 후 onLogin 함수 호출
+                onLogout();
             }
 
             localStorage.removeItem('idToken');
@@ -34,10 +35,7 @@ const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
                 <div>Logout</div>
             </DialogTrigger>
             <DialogContent className="rounded-lg">
-                <DialogHeader>
-                    <DialogTitle>로그아웃</DialogTitle>
-                </DialogHeader>
-                <div className={"flex justify-center text-lg"}>
+                <div className={"flex justify-center text-lg p-4"}>
                     로그아웃 하시겠습니까 ?
                 </div>
                 <DialogFooter>
