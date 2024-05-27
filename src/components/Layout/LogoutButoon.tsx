@@ -18,9 +18,9 @@ const LogoutButton = ({ onLogout } : {onLogout:() => void}) => {
                 onLogout();  // 로그인 성공 후 onLogin 함수 호출
             }
 
-            sessionStorage.removeItem('idToken');
-            sessionStorage.removeItem('refreshToken');
-            sessionStorage.removeItem('nickname');
+            localStorage.removeItem('idToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('nickname');
 
             console.log('Logged out successfully');
         } catch (error) {

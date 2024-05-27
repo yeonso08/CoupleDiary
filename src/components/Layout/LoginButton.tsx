@@ -53,9 +53,9 @@ const LoginButton = ({ onLogin } : {onLogin:() => void}) => {  // onLogin prop �
             const idToken = await user.getIdToken();
             const refreshToken = user.refreshToken;
 
-            sessionStorage.setItem('idToken', idToken);
-            sessionStorage.setItem('refreshToken', refreshToken);
-            sessionStorage.setItem('nickname', user.displayName || '익명');
+            localStorage.setItem('idToken', idToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            localStorage.setItem('nickname', user.displayName || '익명');
 
             if (onLogin) {
                 onLogin();

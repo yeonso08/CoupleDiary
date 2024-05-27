@@ -51,7 +51,7 @@ const DiaryWrite = () => {
                     title: data.title,
                     content: data.content,
                     createdAt: new Date(),
-                    name: sessionStorage.getItem("nickname"),
+                    name: localStorage.getItem("nickname"),
                     userId: user.uid,
                 });
                 navigate('/diary');
