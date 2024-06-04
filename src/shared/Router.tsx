@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from "../pages/Home";
 import Layout from "../components/Layout/Layout";
 import Photo from "../pages/Photo";
@@ -9,20 +9,20 @@ import RequireAuth from './RequireAuth';
 import DiaryModify from "../pages/Diary/DiaryModify";
 const AppRoutes = () => {
     return (
-<Router>
-    <Routes>
-        <Route element={<Layout /> }>
-            <Route path={"/"} element={<Home />} />
-            <Route element={<RequireAuth />}>
-                <Route path={"/photo"} element={<Photo />} />
-                <Route path={"/diary"} element={<Diary />} />
-                <Route path={"/diary/:id"} element={<DiaryDetail />} />
-                <Route path={"/diary/write"} element={<DiaryWrite />} />
-                <Route path={"/diary/modify/:id"} element={<DiaryModify />} />
-            </Route>
-        </Route>
-    </Routes>
-</Router>
+        <Router>
+            <Routes>
+                <Route element={<Layout />}>
+                    <Route path={"/"} element={<Home />} />
+                    <Route element={<RequireAuth />}>
+                        <Route path={"/photo"} element={<Photo />} />
+                        <Route path={"/diary"} element={<Diary />} />
+                        <Route path={"/diary/:id"} element={<DiaryDetail />} />
+                        <Route path={"/diary/write"} element={<DiaryWrite />} />
+                        <Route path={"/diary/modify/:id"} element={<DiaryModify />} />
+                    </Route>
+                </Route>
+            </Routes>
+        </Router>
     )
 }
 
